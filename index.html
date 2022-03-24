@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Red Bull bumm bumm</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+
+    <style type="text/css">
+
+    </style>
+
+    <script type="text/javascript" src="js/paper.js"></script>
+    <script src="js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+
+    <script type="text/javascript">
+        paper.install(window);
+
+        //capas
+        var bgLayer;
+        var pistaLayer;
+        var autoLayer;
+
+        //Pista
+        var pista;
+        var path;
+        var puntoInicial;
+
+        //Posicion Inicial
+        var autoAngulo0;
+        var autoPosicion0;
+
+        //Variables Auto
+        var chasis;
+        var delantera;
+        var aleronD;
+        var aleronT;
+        var blDI;
+        var llantaDI;
+        var blDD;
+        var llantaDD;
+        var llantaDT;
+        var llantaIT;
+
+        var velocidad;
+        var angulo;
+
+        window.onload = function () {
+            paper.setup('myCanvas');
+
+            // Inicializar las capas
+            bgLayer = new Layer();
+            pistaLayer = new Layer();
+            pistaOverlayLayer = new Layer();
+            autoLayer = new Layer();
+
+            // A la capa de pista le incluye el objeto pista
+            pista = new Group();
+            pistaLayer.addChild(pista);
+
+            var tool = new Tool();
+            tool.minDistance = 10;
+            tool.maxDistance = 45;
+
+            //Al hacer click se inicia el juego
+
+            //Con las flechas se mueve el auto
+
+            //con x activa turbo
+
+            //con q mueve alerones
+
+            //con s explota Bum bum
+
+            //Al explotar muestra alert y reinicia
+
+
+        }
+
+
+        //Metodo para crear pista
+        function dibujarPista(){
+
+        }
+
+        //Metodo para dibujar auto
+        function crearF1(){
+
+        }
+
+        function jugar(){
+
+        }
+
+        //Variables control
+        var explosion = 0; //Control de explosion
+        var turbo = 0; //control turbo
+        var cronometro=0;
+
+
+        //Funcion para activar cronometro
+        function iniciar(){
+
+        }
+
+        //Funcion para crear random de tiempo que durara la explosion y que demorara el auto para explotar
+        function tiempoAExplotar(){
+
+        }
+
+        //Funcion para contabilizar y mostrar el tiempo
+        function tiempo(){
+
+        }
+
+        //Funcion para activar turbo y rotar
+        function turbo(){
+
+        }
+
+        //Funcion para rotar aleron
+        function rotarAleron(){
+
+        }
+
+        //Función para explotar carrito
+        function explotar(){
+
+        }
+
+        //Para el cronometro
+        function parar(){
+
+        }
+
+        //Volver al estado inicial
+        function reiniciar(){
+
+        }
+
+
+    </script>
+</head>
+<body>
+    <div id="cronometro">
+        <div id="reloj">
+            <p>00:00:00</p>
+        </div>
+    </div>
+
+    <div id="buttons">
+        <button type="button" class="btn btn-primary" onclick="explotar();">
+            Explotar
+        </button>
+        <button type="button" class="btn btn-primary" onclick="jugar();">
+            Comenzar juego
+        </button>
+    </div>
+
+    <canvas id="myCanvas" resize></canvas>
+</body>
+</html>
