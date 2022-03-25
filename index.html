@@ -16,6 +16,7 @@
 
     <script type="text/javascript">
         paper.install(window);
+        var modoJuego = false;
 
         //capas
         var bgLayer;
@@ -32,16 +33,18 @@
         var autoPosicion0;
 
         //Variables Auto
+        var auto;
         var chasis;
-        var delantera;
-        var aleronD;
-        var aleronT;
-        var blDI;
+        var trompa;
+        var aleroD;
+        var baseAleroT;
+        var aleroT;
+        var baseLlantaDI;
         var llantaDI;
-        var blDD;
+        var baseLlantaDD;
         var llantaDD;
-        var llantaDT;
-        var llantaIT;
+        var llantaTD;
+        var llantaTI;
 
         var velocidad;
         var angulo;
@@ -63,9 +66,48 @@
             tool.minDistance = 10;
             tool.maxDistance = 45;
 
-            //Al hacer click se inicia el juego
 
-            //Con las flechas se mueve el auto
+
+            //Al hacer click se inicia el juego
+            // Al hacer click, se inicia a pintar una pista
+            tool.onMouseDown = function (event) {
+                if (modoJuego) {
+                    return;
+                }
+                pista.clear();
+                path = new Path();
+                pista.addChild(path);
+                path.strokeColor = '#00000';
+                path.selected = true;
+
+                autoPosicion0 = event.point;
+                console.log(autoPosicion0)
+                path.add(event.point);
+                puntoInicial = event.point;
+            };
+
+            // Al arrastrar el mouse, se pinta los segmentos de pista
+            tool.onMouseDrag = function (event) {
+                if (modoJuego) {
+                    return;
+                }
+                var step = event.delta;
+                autoAngulo0 = step.angle;
+                console.log(autoAngulo0)
+                step.angle += 90;
+
+                var top = event.middlePoint.add(step);
+                var bottom = event.middlePoint.subtract(step);
+
+                var line = new Path();
+                line.strokeColor = '#000000';
+                line.add(top);
+                line.add(bottom);
+                pista.addChild(line);
+
+                path.add(top);
+                path.insert(0, bottom);
+            };
 
             //con x activa turbo
 
@@ -73,6 +115,87 @@
 
             //con s explota Bum bum
 
+            //Con las flechas se mueve el auto
+            tool.onKeyDown = function (event) {
+                console.log("EVENT:" + event)
+                if (!modoJuego) {
+                    return;
+                };
+                if (auto == null) {
+                    return;
+                };
+                event.preventDefault();
+                // Se aumenta la velocidad
+                if (event.key == 'up') {
+
+                    velocidad += 5;
+                    velocidad = Math.min(velocidad + 5, 15);
+                };
+                // Se disminuye la velocidad
+                if (event.key == 'down') {
+                    velocidad = Math.max(velocidad - 2.5, -15);
+                };
+                // Se gira el auto a la izquierda
+                if (event.key == 'left') {
+                    angulo = angulo - (Math.PI / 180) * 5;
+                    auto.rotate(-5);
+                };
+                // Se gira el auto a la derecha
+                if (event.key == 'right') {
+                    angulo = angulo + (Math.PI / 180) * 5;
+                    auto.rotate(5);
+                };
+            };
+
+            // En cada frame
+            view.onFrame = function (event) {
+                if (modoJuego) {
+                    if (auto != null) {
+                        //sirena.rotate(3, auto.position);
+                        // Se actualiza la ubicacion del auto, segun la velocidad
+                        var xp = auto.position.x + (Math.cos(angulo) * velocidad);
+                        var yp = auto.position.y + (Math.sin(angulo) * velocidad);
+                        auto.position.x = Math.max(0, Math.min(xp, view.size.width));
+                        auto.position.y = Math.max(0, Math.min(yp, view.size.height));
+                        velocidad = velocidad * 0.9;
+
+                        // Verifica que se encuentre sobre un poligono
+                        var hitResult = pistaOverlayLayer.hitTest(auto.position);
+                        if (hitResult) {
+                            if (hitResult.item.flag == null) {
+                                hitResult.item.flag = true;
+                                auto.scale((hitResult.item.bounds.height) / (auto.bounds.height));
+                                hitResult.item.style.fillColor = 'green';
+                                segmentosLimpios++;
+                            }
+                        };
+
+                        // Verifica el final de juego
+                      /*  if (segmentosLimpios == pistaOverlayLayer.children.length) {
+
+                            parar();
+                            if (cro < bestcro) {
+                                var person = prompt("Haz hecho el mejor registro!, escribe tu nombre", "Player 1");
+
+                                if (person != null) {
+                                    parar();
+                                    x = "Mejor Tiempo = " + person + " -> " + document.getElementById("reloj").innerHTML + "<br>";
+                                    document.getElementById("bestplayer").innerHTML = x;
+                                }
+                                bestcro = cro;
+                            }
+                            else {
+                                alert('Fin del juego. Todav�a no eres el mejor :(');
+                            }
+                            segmentosLimpios++; // Para solo mostrar una alerta una vez
+                            reiniciar();
+                        };
+
+                        tiempo
+
+                    };*/
+                };
+            };
             //Al explotar muestra alert y reinicia
 
 
@@ -87,17 +210,108 @@
         //Metodo para dibujar auto
         function crearF1(){
 
+            pix=150
+            piy=50
+
+            autoLayer.clear();
+            auto = new Group();
+
+            chasis = new Path.Rectangle(new Point(pix, piy), new Size(80, 100));
+            chasis.style = {
+                fillColor: 'red',
+                strokeColor: 'black'
+            };
+            auto.addChild(chasis);
+
+            trompa = new Path();
+            trompa.add(new Point(pix+80,120))
+            trompa.add(new Point(pix+80+150,110))
+            trompa.add(new Point(pix+80+150,90))
+            trompa.add(new Point(pix+80,80))
+
+            trompa.closed = true;
+            trompa.fillColor = 'yellow';
+            trompa.strokeColor = 'black';
+
+            auto.addChild(trompa)
+
+            llantaTI = new Path.RoundRectangle(new Rectangle(new Point(pix+15 , piy-10), new Point(pix-20, piy+5)), new Size(2, 2));
+            llantaTD = new Path.RoundRectangle(new Rectangle(new Point(pix+15 , piy+100-5), new Point(pix-20, piy+100+10)), new Size(2, 2));
+            llantaTI.fillColor = 'black';
+            llantaTD.fillColor = 'black';
+            auto.addChild(llantaTI);
+            auto.addChild(llantaTD);
+
+            baseLlantaDI = new Path();
+            baseLlantaDI.add(new Point(pix+80+95,piy+40-4))
+            baseLlantaDI.add(new Point(pix+80+85,piy+40-5))
+            baseLlantaDI.add(new Point(pix+80+95,piy+40-34))
+            baseLlantaDI.closed = true;
+            baseLlantaDI.fillColor = 'red';
+            baseLlantaDI.strokeColor = 'black';
+
+            auto.addChild(baseLlantaDI);
+
+            baseLlantaDD = new Path();
+            baseLlantaDD.add(new Point(pix+80+95,piy+70-6))
+            baseLlantaDD.add(new Point(pix+80+85,piy+70-5))
+            baseLlantaDD.add(new Point(pix+80+95,piy+70+24))
+            baseLlantaDD.closed = true;
+            baseLlantaDD.fillColor = 'red';
+            baseLlantaDD.strokeColor = 'black';
+
+            auto.addChild(baseLlantaDD);
+
+            llantaDI = new Path.RoundRectangle(new Rectangle(new Point(pix+80+95+15 , piy-10), new Point(pix+80+95-20, piy+5)), new Size(2, 2));
+            llantaDD = new Path.RoundRectangle(new Rectangle(new Point(pix+80+95+15 , piy+100-5), new Point(pix+80+95-20, piy+100+10)), new Size(2, 2));
+            llantaDI.fillColor = 'black';
+            llantaDD.fillColor = 'black';
+            auto.addChild(llantaDI);
+            auto.addChild(llantaDD);
+
+            aleroD = new Path.Rectangle(new Point(pix+80+125, piy-10), new Size(20, 120));
+            aleroD.style = {
+                fillColor: 'orange',
+                strokeColor: 'black'
+            };
+            auto.addChild(aleroD);
+
+            baseAleroT = new Path.Rectangle(new Point(pix-30, piy+30), new Size(30, 40));
+            baseAleroT.style = {
+                fillColor: 'orange',
+                strokeColor: 'black'
+            };
+            auto.addChild(baseAleroT);
+
+            aleroT = new Path.Rectangle(new Point(pix-30-30, piy+20), new Size(30, 60));
+            aleroT.style = {
+                fillColor: 'orange',
+                strokeColor: 'black'
+            };
+            auto.addChild(aleroT);
+
+            angulo = (autoAngulo0 + 360) * (Math.PI / 180);
+            auto.rotate(autoAngulo0 + 180);
+            auto.position = autoPosicion0;
+
         }
 
-        function jugar(){
 
-        }
 
         //Variables control
         var explosion = 0; //Control de explosion
         var turbo = 0; //control turbo
         var cronometro=0;
+        var marcha =0
 
+        function jugar(){
+
+            modoJuego = true;
+            reiniciar();
+            empezar();
+
+            crearF1()
+        }
 
         //Funcion para activar cronometro
         function iniciar(){
@@ -109,9 +323,48 @@
 
         }
 
-        //Funcion para contabilizar y mostrar el tiempo
-        function tiempo(){
+        function empezar() {
+            if (marcha == 0) {
+                emp = new Date()
+                elcrono = setInterval(tiempo, 10);
+                marcha = 1
+            }
+        }
 
+        //Funcion para contabilizar y mostrar el tiempo
+        function tiempo() {
+            actual = new Date()
+            cronometro = actual - emp
+            cr = new Date()
+            cr.setTime(cronometro)
+            cs = cr.getMilliseconds()
+            cs = cs / 10;
+            cs = Math.round(cs)
+            sg = cr.getSeconds();
+            mn = cr.getMinutes();
+            ho = cr.getHours() - 1;
+            if (cs < 10) { cs = "0" + cs; }
+            if (sg < 10) { sg = "0" + sg; }
+            if (mn < 10) { mn = "0" + mn; }
+            document.getElementById("reloj").innerHTML = mn + " : " + sg + " : " + cs; //pasar a pantalla.
+        }
+        //parar el cronometro
+        function parar() {
+            if (marcha == 1) {
+                clearInterval(elcrono);
+                marcha = 0;
+            }
+        }
+
+
+        //Volver al estado inicial
+        function reiniciar(){
+            if (marcha == 1) {
+                clearInterval(elcrono);
+                marcha = 0;
+            }
+            cronometro = 0;
+            document.getElementById("reloj").innerHTML = "00 : 00 : 00";
         }
 
         //Funcion para activar turbo y rotar
@@ -129,15 +382,8 @@
 
         }
 
-        //Para el cronometro
-        function parar(){
 
-        }
 
-        //Volver al estado inicial
-        function reiniciar(){
-
-        }
 
 
     </script>
@@ -155,6 +401,9 @@
         </button>
         <button type="button" class="btn btn-primary" onclick="jugar();">
             Comenzar juego
+        </button>
+        <button type="button" class="btn btn-primary" onclick="parar();">
+            Pausar juego
         </button>
     </div>
 
