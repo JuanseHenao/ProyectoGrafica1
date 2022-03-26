@@ -29,8 +29,8 @@
         var puntoInicial;
 
         //Posicion Inicial
-        var autoAngulo0;
-        var autoPosicion0;
+        var autoAngulo0 =0;
+        var autoPosicion0 = new Point(150,50);
 
         //Variables Auto
         var auto;
@@ -46,7 +46,7 @@
         var llantaTD;
         var llantaTI;
 
-        var velocidad;
+        var velocidad=10;
         var angulo;
 
         window.onload = function () {
@@ -66,49 +66,23 @@
             tool.minDistance = 10;
             tool.maxDistance = 45;
 
-
-
+            crearF1()
+            modoJuego = true;
             //Al hacer click se inicia el juego
-            // Al hacer click, se inicia a pintar una pista
-            tool.onMouseDown = function (event) {
-                if (modoJuego) {
-                    return;
-                }
-                pista.clear();
-                path = new Path();
-                pista.addChild(path);
-                path.strokeColor = '#00000';
-                path.selected = true;
+            
 
-                autoPosicion0 = event.point;
-                console.log(autoPosicion0)
-                path.add(event.point);
-                puntoInicial = event.point;
-            };
+            tool.onMouseMove = function (event){
+                if (auto != null) {
+                    // Se actualiza la ubicacion del auto, segun la velocidad
 
-            // Al arrastrar el mouse, se pinta los segmentos de pista
-            tool.onMouseDrag = function (event) {
-                if (modoJuego) {
-                    return;
-                }
-                var step = event.delta;
-                autoAngulo0 = step.angle;
-                console.log(autoAngulo0)
-                step.angle += 90;
+                    var xp = event.point.x + (Math.cos(angulo) * velocidad);
+                    var yp = event.point.y + (Math.sin(angulo) * velocidad);
+                    auto.position.x = Math.max(0, Math.min(xp, view.size.width));
+                    auto.position.y = Math.max(0, Math.min(yp, view.size.height));
+                    velocidad = velocidad * 0.9;
 
-                var top = event.middlePoint.add(step);
-                var bottom = event.middlePoint.subtract(step);
-
-                var line = new Path();
-                line.strokeColor = '#000000';
-                line.add(top);
-                line.add(bottom);
-                pista.addChild(line);
-
-                path.add(top);
-                path.insert(0, bottom);
-            };
-
+                };
+            }
             //con x activa turbo
 
             //con q mueve alerones
@@ -119,86 +93,64 @@
             tool.onKeyDown = function (event) {
                 console.log("EVENT:" + event)
                 if (!modoJuego) {
+                    console.log("No modo juego")
                     return;
-                };
+                }
+                ;
                 if (auto == null) {
+                    console.log("No Auto")
                     return;
-                };
+                }
+                ;
                 event.preventDefault();
                 // Se aumenta la velocidad
                 if (event.key == 'up') {
 
+                    console.log(auto.position)
+
                     velocidad += 5;
                     velocidad = Math.min(velocidad + 5, 15);
-                };
+                }
+                ;
                 // Se disminuye la velocidad
                 if (event.key == 'down') {
                     velocidad = Math.max(velocidad - 2.5, -15);
-                };
+                }
+                ;
                 // Se gira el auto a la izquierda
                 if (event.key == 'left') {
                     angulo = angulo - (Math.PI / 180) * 5;
                     auto.rotate(-5);
-                };
+                }
+                ;
                 // Se gira el auto a la derecha
                 if (event.key == 'right') {
                     angulo = angulo + (Math.PI / 180) * 5;
                     auto.rotate(5);
-                };
+                }
+                ;
             };
 
             // En cada frame
             view.onFrame = function (event) {
-                if (modoJuego) {
+                /*if (modoJuego) {
+
                     if (auto != null) {
-                        //sirena.rotate(3, auto.position);
                         // Se actualiza la ubicacion del auto, segun la velocidad
+
+
                         var xp = auto.position.x + (Math.cos(angulo) * velocidad);
                         var yp = auto.position.y + (Math.sin(angulo) * velocidad);
                         auto.position.x = Math.max(0, Math.min(xp, view.size.width));
                         auto.position.y = Math.max(0, Math.min(yp, view.size.height));
                         velocidad = velocidad * 0.9;
 
-                        // Verifica que se encuentre sobre un poligono
-                        var hitResult = pistaOverlayLayer.hitTest(auto.position);
-                        if (hitResult) {
-                            if (hitResult.item.flag == null) {
-                                hitResult.item.flag = true;
-                                auto.scale((hitResult.item.bounds.height) / (auto.bounds.height));
-                                hitResult.item.style.fillColor = 'green';
-                                segmentosLimpios++;
-                            }
-                        };
-
-                        // Verifica el final de juego
-                      /*  if (segmentosLimpios == pistaOverlayLayer.children.length) {
-
-                            parar();
-                            if (cro < bestcro) {
-                                var person = prompt("Haz hecho el mejor registro!, escribe tu nombre", "Player 1");
-
-                                if (person != null) {
-                                    parar();
-                                    x = "Mejor Tiempo = " + person + " -> " + document.getElementById("reloj").innerHTML + "<br>";
-                                    document.getElementById("bestplayer").innerHTML = x;
-                                }
-                                bestcro = cro;
-                            }
-                            else {
-                                alert('Fin del juego. Todav�a no eres el mejor :(');
-                            }
-                            segmentosLimpios++; // Para solo mostrar una alerta una vez
-                            reiniciar();
-                        };
-
-                        tiempo
-
-                    };*/
-                };
-            };
-            //Al explotar muestra alert y reinicia
+                    };
+                };*/
+                //Al explotar muestra alert y reinicia
 
 
+            }
         }
 
 
@@ -209,7 +161,7 @@
 
         //Metodo para dibujar auto
         function crearF1(){
-
+            console.log("crear Carro")
             pix=150
             piy=50
 
@@ -292,6 +244,9 @@
 
             angulo = (autoAngulo0 + 360) * (Math.PI / 180);
             auto.rotate(autoAngulo0 + 180);
+
+            console.log(autoPosicion0)
+
             auto.position = autoPosicion0;
 
         }
@@ -310,6 +265,7 @@
             reiniciar();
             empezar();
 
+            console.log("jugar")
             crearF1()
         }
 
@@ -396,14 +352,8 @@
     </div>
 
     <div id="buttons">
-        <button type="button" class="btn btn-primary" onclick="explotar();">
+        <button type="button" class="btn btn-primary" onClick="explotar();">
             Explotar
-        </button>
-        <button type="button" class="btn btn-primary" onclick="jugar();">
-            Comenzar juego
-        </button>
-        <button type="button" class="btn btn-primary" onclick="parar();">
-            Pausar juego
         </button>
     </div>
 
