@@ -30,7 +30,7 @@
 
         //Posicion Inicial
         var autoAngulo0 =0;
-        var autoPosicion0 = new Point(150,50);
+        var autoPosicion0 = new Point(300,200);
 
         //Variables Auto
         var auto;
@@ -46,8 +46,12 @@
         var llantaTD;
         var llantaTI;
 
-        var velocidad=10;
+        var velocidad=0;
         var angulo;
+        var angLlantas=0
+
+        var velUp=5
+        var velTurbo=10
 
         window.onload = function () {
             paper.setup('myCanvas');
@@ -66,11 +70,13 @@
             tool.minDistance = 10;
             tool.maxDistance = 45;
 
+            dibujarPista()
             crearF1()
             modoJuego = true;
+
             //Al hacer click se inicia el juego
 
-            tool.onMouseMove = function (event){
+           /* tool.onMouseMove = function (event){
                 if (auto != null) {
                     // Se actualiza la ubicacion del auto, segun la velocidad
 
@@ -81,7 +87,7 @@
                     velocidad = velocidad * 0.9;
 
                 };
-            }
+            }*/
             //con x activa turbo
 
             //con q mueve alerones
@@ -90,7 +96,6 @@
 
             //Con las flechas se mueve el auto
             tool.onKeyDown = function (event) {
-                console.log("EVENT:" + event)
                 if (!modoJuego) {
                     console.log("No modo juego")
                     return;
@@ -105,10 +110,8 @@
                 // Se aumenta la velocidad
                 if (event.key == 'up') {
 
-                    console.log(auto.position)
-
-                    velocidad += 5;
-                    velocidad = Math.min(velocidad + 5, 15);
+                    velocidad += velUp;
+                    velocidad = velocidad<50?velocidad:50;
                 }
                 ;
                 // Se disminuye la velocidad
@@ -119,12 +122,34 @@
                 // Se gira el auto a la izquierda
                 if (event.key == 'left') {
                     angulo = angulo - (Math.PI / 180) * 5;
+                    angLlantas =angLlantas>-45?angLlantas-5:-45
+                    console.log(angLlantas)
+
+                    llantaDI.rotate(angLlantas>-45?-5:0)
+                    llantaDD.rotate(angLlantas>-45?-5:0)
+                    llantaTI.rotate(angLlantas>-45?-2:0)
+                    llantaTD.rotate(angLlantas>-45?-2:0)
+
+                    aleroT.rotate(angLlantas>-45?-1:0)
+                    aleroD.rotate(angLlantas>-45?-0.5:0)
+
                     auto.rotate(-5);
                 }
                 ;
                 // Se gira el auto a la derecha
                 if (event.key == 'right') {
                     angulo = angulo + (Math.PI / 180) * 5;
+                    angLlantas =angLlantas<45?angLlantas+5:45
+                    console.log(angLlantas)
+
+                    llantaDI.rotate(angLlantas<45?5:0)
+                    llantaDD.rotate(angLlantas<45?5:0)
+                    llantaTI.rotate(angLlantas<45?2:0)
+                    llantaTD.rotate(angLlantas<45?2:0)
+
+                    aleroT.rotate(angLlantas<45?1:0)
+                    aleroD.rotate(angLlantas<45?0.5:0)
+
                     auto.rotate(5);
                 }
                 ;
@@ -132,7 +157,7 @@
 
             // En cada frame
             view.onFrame = function (event) {
-                /*if (modoJuego) {
+                if (modoJuego) {
 
                     if (auto != null) {
                         // Se actualiza la ubicacion del auto, segun la velocidad
@@ -145,7 +170,7 @@
                         velocidad = velocidad * 0.9;
 
                     };
-                };*/
+                };
                 //Al explotar muestra alert y reinicia
 
 
@@ -155,7 +180,168 @@
 
         //Metodo para crear pista
         function dibujarPista(){
+            console.log("crear Pista")
+            pix=300
+            piy=10
 
+            pistaLayer.clear();
+            pista = new Group();
+
+            var r1=new Path.Rectangle(new Point(pix, piy), new Size(500, 120));
+
+            pista.addChild(r1);
+
+
+
+            var p21= new Path.Arc({
+                from:[pix+500,piy],
+                through:[pix+500+80,piy],
+                to:[pix+500+160,piy+160],
+                strokeColor: 'black'
+            })
+
+            var p22= new Path.Arc({
+                from:[pix+500,piy+120],
+                through:[pix+500+20,piy+120],
+                to:[pix+500+40,piy+160],
+                strokeColor: 'black'
+            })
+
+            pista.addChild(p21);
+            pista.addChild(p22);
+
+            var r3=new Path.Rectangle(new Point(pix+500+40,piy+160),new Size(120,80));
+
+            pista.addChild(r3)
+
+            var p41= new Path.Arc({
+                from:[pix+500,piy+400],
+                through:[pix+500+80,piy+400],
+                to:[pix+500+160,piy+240],
+                strokeColor: 'black'
+            })
+
+            var p42= new Path.Arc({
+                from:[pix+500+40,piy+240],
+                through:[pix+500+20,piy+280],
+                to:[pix+500,piy+280],
+                strokeColor: 'black'
+            })
+
+            pista.addChild(p41);
+            pista.addChild(p42);
+
+            var r5=new Path.Rectangle(new Point(pix+160,piy+280),new Size(340,120));
+
+            pista.addChild(r5)
+
+            var p61= new Path.Arc({
+                from:[pix+160,piy+280],
+                through:[pix+120,piy+280],
+                to:[pix+160,piy+280+120+80+120],
+                strokeColor: 'black'
+            })
+
+            var p62= new Path.Arc({
+                from:[pix+160,piy+280+120],
+                through:[pix+120,piy+280+120],
+                to:[pix+160,piy+280+120+80],
+                strokeColor: 'black'
+            })
+
+            pista.addChild(p61);
+            pista.addChild(p62);
+
+            var r7=new Path.Rectangle(new Point(pix+160,piy+280+120+80),new Size(540,120));
+
+            pista.addChild(r7)
+
+            var p81= new Path.Arc({
+                from:[pix+160+540,piy+280+120+80],
+                through:[pix+700+80,piy+280+120+80],
+                to:[pix+740+120,piy+640],
+                strokeColor: 'black'
+            })
+
+            var p82= new Path.Arc({
+                from:[pix+160+540,piy+280+120+80+120],
+                through:[pix+700+20,piy+280+120+80+120],
+                to:[pix+740,piy+640],
+                strokeColor: 'black'
+            })
+
+            pista.addChild(p81);
+            pista.addChild(p82);
+
+            var r9=new Path.Rectangle(new Point(pix+740,piy+640),new Size(120,120));
+
+            pista.addChild(r9)
+
+            var p101= new Path.Arc({
+                from:[pix+740+120,piy+640+120],
+                through:[pix+700+80,piy+800+120],
+                to:[pix+700,piy+800+120],
+                strokeColor: 'black'
+            })
+
+            var p102= new Path.Arc({
+                from:[pix+740,piy+640+120],
+                through:[pix+700+20,piy+800],
+                to:[pix+700,piy+800],
+                strokeColor: 'black'
+            })
+
+            pista.addChild(p101);
+            pista.addChild(p102);
+
+            var r11=new Path.Rectangle(new Point(pix,piy+800),new Size(700,120));
+
+            pista.addChild(r11)
+
+            var p121= new Path.Arc({
+                from:[pix,piy+800+120],
+                through:[pix-80,piy+800+120],
+                to:[pix-160,piy+160+600],
+                strokeColor: 'black'
+            })
+
+            var p122= new Path.Arc({
+                from:[pix,piy+800],
+                through:[pix-20,piy+800],
+                to:[pix-160+120,piy+160+600],
+                strokeColor: 'black'
+            })
+
+            pista.addChild(p121);
+            pista.addChild(p122);
+
+            var r13=new Path.Rectangle(new Point(pix-160,piy+160),new Size(120,600));
+
+            pista.addChild(r13)
+
+            var p141= new Path.Arc({
+                from:[pix-160,piy+160],
+                through:[pix-80,piy],
+                to:[pix,piy],
+                strokeColor: 'black'
+            })
+
+            var p142= new Path.Arc({
+                from:[pix-160+120,piy+160],
+                through:[pix-20,piy+120],
+                to:[pix,piy+120],
+                strokeColor: 'black'
+            })
+
+            pista.addChild(p141);
+            pista.addChild(p142);
+
+            pista.style={
+                fillColor:"blue",
+                strokeColor: 'black'
+            };
+
+            pistaLayer.addChild(pista)
         }
 
         //Metodo para dibujar auto
@@ -241,8 +427,10 @@
             };
             auto.addChild(aleroT);
 
+            autoLayer.addChild(auto);
+
             angulo = (autoAngulo0 + 360) * (Math.PI / 180);
-            auto.rotate(autoAngulo0 + 180);
+            //auto.rotate(autoAngulo0 + 180);
 
             console.log(autoPosicion0)
 
@@ -344,18 +532,6 @@
     </script>
 </head>
 <body>
-    <div id="cronometro">
-        <div id="reloj">
-            <p>00:00:00</p>
-        </div>
-    </div>
-
-    <div id="buttons">
-        <button type="button" class="btn btn-primary" onClick="explotar();">
-            Explotar
-        </button>
-    </div>
-
     <canvas id="myCanvas" resize></canvas>
 </body>
 </html>
