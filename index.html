@@ -46,12 +46,16 @@
         var llantaTD;
         var llantaTI;
 
+        var explosion;
+
         var velocidad=0;
         var angulo;
         var angLlantas=0
 
         var velUp=5
-        var velTurbo=10
+
+        var xp
+        var yp
 
         window.onload = function () {
             paper.setup('myCanvas');
@@ -70,9 +74,7 @@
             tool.minDistance = 10;
             tool.maxDistance = 45;
 
-            dibujarPista()
-            crearF1()
-            modoJuego = true;
+            jugar()
 
             //Al hacer click se inicia el juego
 
@@ -97,7 +99,6 @@
             //Con las flechas se mueve el auto
             tool.onKeyDown = function (event) {
                 if (!modoJuego) {
-                    console.log("No modo juego")
                     return;
                 }
                 ;
@@ -152,6 +153,11 @@
 
                     auto.rotate(5);
                 }
+
+                if (event.key == 's'){
+                    explotar(xp,yp)
+                }
+
                 ;
             };
 
@@ -163,8 +169,8 @@
                         // Se actualiza la ubicacion del auto, segun la velocidad
 
 
-                        var xp = auto.position.x + (Math.cos(angulo) * velocidad);
-                        var yp = auto.position.y + (Math.sin(angulo) * velocidad);
+                        xp = auto.position.x + (Math.cos(angulo) * velocidad);
+                        yp = auto.position.y + (Math.sin(angulo) * velocidad);
                         auto.position.x = Math.max(0, Math.min(xp, view.size.width));
                         auto.position.y = Math.max(0, Math.min(yp, view.size.height));
                         velocidad = velocidad * 0.9;
@@ -432,96 +438,57 @@
             angulo = (autoAngulo0 + 360) * (Math.PI / 180);
             //auto.rotate(autoAngulo0 + 180);
 
-            console.log(autoPosicion0)
-
             auto.position = autoPosicion0;
 
         }
 
-
-
-        //Variables control
-        var explosion = 0; //Control de explosion
-        var turbo = 0; //control turbo
-        var cronometro=0;
-        var marcha =0
-
         function jugar(){
 
-            modoJuego = true;
-            reiniciar();
-            empezar();
-
-            console.log("jugar")
+            dibujarPista()
             crearF1()
-        }
-
-        //Funcion para activar cronometro
-        function iniciar(){
-
-        }
-
-        //Funcion para crear random de tiempo que durara la explosion y que demorara el auto para explotar
-        function tiempoAExplotar(){
-
-        }
-
-        function empezar() {
-            if (marcha == 0) {
-                emp = new Date()
-                elcrono = setInterval(tiempo, 10);
-                marcha = 1
-            }
-        }
-
-        //Funcion para contabilizar y mostrar el tiempo
-        function tiempo() {
-            actual = new Date()
-            cronometro = actual - emp
-            cr = new Date()
-            cr.setTime(cronometro)
-            cs = cr.getMilliseconds()
-            cs = cs / 10;
-            cs = Math.round(cs)
-            sg = cr.getSeconds();
-            mn = cr.getMinutes();
-            ho = cr.getHours() - 1;
-            if (cs < 10) { cs = "0" + cs; }
-            if (sg < 10) { sg = "0" + sg; }
-            if (mn < 10) { mn = "0" + mn; }
-            document.getElementById("reloj").innerHTML = mn + " : " + sg + " : " + cs; //pasar a pantalla.
-        }
-        //parar el cronometro
-        function parar() {
-            if (marcha == 1) {
-                clearInterval(elcrono);
-                marcha = 0;
-            }
-        }
-
-
-        //Volver al estado inicial
-        function reiniciar(){
-            if (marcha == 1) {
-                clearInterval(elcrono);
-                marcha = 0;
-            }
-            cronometro = 0;
-            document.getElementById("reloj").innerHTML = "00 : 00 : 00";
-        }
-
-        //Funcion para activar turbo y rotar
-        function turbo(){
-
-        }
-
-        //Funcion para rotar aleron
-        function rotarAleron(){
-
+            modoJuego = true;
         }
 
         //Función para explotar carrito
-        function explotar(){
+        function explotar(pix,piy){
+
+
+            explosion = new Path();
+            explosion.add(new Point(pix-150,piy-100))
+            explosion.add(new Point(pix-100,piy-20))
+            explosion.add(new Point(pix-50,piy-125))
+            explosion.add(new Point(pix-0,piy-25))
+            explosion.add(new Point(pix+50,piy-50))
+            explosion.add(new Point(pix+100,piy-25))
+            explosion.add(new Point(pix+150,piy-150))
+            explosion.add(new Point(pix+200,piy-50))
+
+            explosion.add(new Point(pix+350,piy-30))
+            explosion.add(new Point(pix+150,piy-30))
+            explosion.add(new Point(pix+300,piy))
+            explosion.add(new Point(pix+150,piy+30))
+
+            explosion.add(new Point(pix+160,piy+105))
+            explosion.add(new Point(pix+120,piy+20))
+            explosion.add(new Point(pix+70,piy+85))
+            explosion.add(new Point(pix+15,piy+15))
+            explosion.add(new Point(pix-50,piy+125))
+            explosion.add(new Point(pix-100,piy+20))
+            explosion.add(new Point(pix-150,piy+150))
+            explosion.add(new Point(pix-140,piy+15))
+
+            explosion.add(new Point(pix-250,piy+30))
+            explosion.add(new Point(pix-150,piy-15))
+            explosion.add(new Point(pix-300,piy-50))
+            explosion.add(new Point(pix-100,piy-20))
+
+            explosion.closed = true;
+            explosion.fillColor = '#F29B14';
+            explosion.strokeColor = 'red';
+
+            auto.addChild(explosion)
+
+            modoJuego=false
 
         }
 
@@ -532,6 +499,7 @@
     </script>
 </head>
 <body>
+    <div><button onclick="jugar()">Jugar</button></div>
     <canvas id="myCanvas" resize></canvas>
 </body>
 </html>
