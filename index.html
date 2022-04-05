@@ -167,6 +167,7 @@
               auto.position.y = Math.max(0, Math.min(yp, view.size.height));
               velocidad = velocidad * 0.9;
             }
+<<<<<<< HEAD
           }
           //Al explotar muestra alert y reinicia
         };
@@ -523,6 +524,323 @@
 
         modoJuego = false;
       }
+=======
+        }
+
+
+        //Metodo para crear pista
+        function dibujarPista(){
+            console.log("crear Pista")
+            pix=300
+            piy=10
+
+            pistaLayer.clear();
+            pista = new Group();
+
+            var r1=new Path.Rectangle(new Point(pix, piy), new Size(500, 120));
+
+            pista.addChild(r1);
+
+
+
+            var p21= new Path.Arc({
+                from:[pix+500,piy],
+                through:[pix+500+80,piy],
+                to:[pix+500+160,piy+160],
+                strokeColor: 'black'
+            })
+
+            var p22= new Path.Arc({
+                from:[pix+500,piy+120],
+                through:[pix+500+20,piy+120],
+                to:[pix+500+40,piy+160],
+                strokeColor: 'black'
+            })
+
+            pista.addChild(p21);
+            pista.addChild(p22);
+
+            var r3=new Path.Rectangle(new Point(pix+500+40,piy+160),new Size(120,80));
+
+            pista.addChild(r3)
+
+            var p41= new Path.Arc({
+                from:[pix+500,piy+400],
+                through:[pix+500+80,piy+400],
+                to:[pix+500+160,piy+240],
+                strokeColor: 'black'
+            })
+
+            var p42= new Path.Arc({
+                from:[pix+500+40,piy+240],
+                through:[pix+500+20,piy+280],
+                to:[pix+500,piy+280],
+                strokeColor: 'black'
+            })
+
+            pista.addChild(p41);
+            pista.addChild(p42);
+
+            var r5=new Path.Rectangle(new Point(pix+160,piy+280),new Size(340,120));
+
+            pista.addChild(r5)
+
+            var p61= new Path.Arc({
+                from:[pix+160,piy+280],
+                through:[pix+120,piy+280],
+                to:[pix+160,piy+280+120+80+120],
+                strokeColor: 'black'
+            })
+
+            var p62= new Path.Arc({
+                from:[pix+160,piy+280+120],
+                through:[pix+120,piy+280+120],
+                to:[pix+160,piy+280+120+80],
+                strokeColor: 'black'
+            })
+
+            pista.addChild(p61);
+            pista.addChild(p62);
+
+            var r7=new Path.Rectangle(new Point(pix+160,piy+280+120+80),new Size(540,120));
+
+            pista.addChild(r7)
+
+            var p81= new Path.Arc({
+                from:[pix+160+540,piy+280+120+80],
+                through:[pix+700+80,piy+280+120+80],
+                to:[pix+740+120,piy+640],
+                strokeColor: 'black'
+            })
+
+            var p82= new Path.Arc({
+                from:[pix+160+540,piy+280+120+80+120],
+                through:[pix+700+20,piy+280+120+80+120],
+                to:[pix+740,piy+640],
+                strokeColor: 'black'
+            })
+
+            pista.addChild(p81);
+            pista.addChild(p82);
+
+            var r9=new Path.Rectangle(new Point(pix+740,piy+640),new Size(120,120));
+
+            pista.addChild(r9)
+
+            var p101= new Path.Arc({
+                from:[pix+740+120,piy+640+120],
+                through:[pix+700+80,piy+800+120],
+                to:[pix+700,piy+800+120],
+                strokeColor: 'black'
+            })
+
+            var p102= new Path.Arc({
+                from:[pix+740,piy+640+120],
+                through:[pix+700+20,piy+800],
+                to:[pix+700,piy+800],
+                strokeColor: 'black'
+            })
+
+            pista.addChild(p101);
+            pista.addChild(p102);
+
+            var r11=new Path.Rectangle(new Point(pix,piy+800),new Size(700,120));
+
+            pista.addChild(r11)
+
+            var p121= new Path.Arc({
+                from:[pix,piy+800+120],
+                through:[pix-80,piy+800+120],
+                to:[pix-160,piy+160+600],
+                strokeColor: 'black'
+            })
+
+            var p122= new Path.Arc({
+                from:[pix,piy+800],
+                through:[pix-20,piy+800],
+                to:[pix-160+120,piy+160+600],
+                strokeColor: 'black'
+            })
+
+            pista.addChild(p121);
+            pista.addChild(p122);
+
+            var r13=new Path.Rectangle(new Point(pix-160,piy+160),new Size(120,600));
+
+            pista.addChild(r13)
+
+            var p141= new Path.Arc({
+                from:[pix-160,piy+160],
+                through:[pix-80,piy],
+                to:[pix,piy],
+                strokeColor: 'black'
+            })
+
+            var p142= new Path.Arc({
+                from:[pix-160+120,piy+160],
+                through:[pix-20,piy+120],
+                to:[pix,piy+120],
+                strokeColor: 'black'
+            })
+
+            pista.addChild(p141);
+            pista.addChild(p142);
+
+            pista.style={
+
+                strokeColor: 'black'
+            };
+
+            pistaLayer.addChild(pista)
+        }
+
+        //Metodo para dibujar auto
+        function crearF1(){
+            console.log("crear Carro")
+            pix=150
+            piy=50
+
+            autoLayer.clear();
+            auto = new Group();
+
+            chasis = new Path.Rectangle(new Point(pix, piy), new Size(80, 100));
+            chasis.style = {
+                fillColor: 'red',
+                strokeColor: 'black'
+            };
+            auto.addChild(chasis);
+
+            trompa = new Path();
+            trompa.add(new Point(pix+80,120))
+            trompa.add(new Point(pix+80+150,110))
+            trompa.add(new Point(pix+80+150,90))
+            trompa.add(new Point(pix+80,80))
+
+            trompa.closed = true;
+            trompa.fillColor = 'yellow';
+            trompa.strokeColor = 'black';
+
+            auto.addChild(trompa)
+
+            llantaTI = new Path.RoundRectangle(new Rectangle(new Point(pix+15 , piy-10), new Point(pix-20, piy+5)), new Size(2, 2));
+            llantaTD = new Path.RoundRectangle(new Rectangle(new Point(pix+15 , piy+100-5), new Point(pix-20, piy+100+10)), new Size(2, 2));
+            llantaTI.fillColor = 'black';
+            llantaTD.fillColor = 'black';
+            auto.addChild(llantaTI);
+            auto.addChild(llantaTD);
+
+            baseLlantaDI = new Path();
+            baseLlantaDI.add(new Point(pix+80+95,piy+40-4))
+            baseLlantaDI.add(new Point(pix+80+85,piy+40-5))
+            baseLlantaDI.add(new Point(pix+80+95,piy+40-34))
+            baseLlantaDI.closed = true;
+            baseLlantaDI.fillColor = 'red';
+            baseLlantaDI.strokeColor = 'black';
+
+            auto.addChild(baseLlantaDI);
+
+            baseLlantaDD = new Path();
+            baseLlantaDD.add(new Point(pix+80+95,piy+70-6))
+            baseLlantaDD.add(new Point(pix+80+85,piy+70-5))
+            baseLlantaDD.add(new Point(pix+80+95,piy+70+24))
+            baseLlantaDD.closed = true;
+            baseLlantaDD.fillColor = 'red';
+            baseLlantaDD.strokeColor = 'black';
+
+            auto.addChild(baseLlantaDD);
+
+            llantaDI = new Path.RoundRectangle(new Rectangle(new Point(pix+80+95+15 , piy-10), new Point(pix+80+95-20, piy+5)), new Size(2, 2));
+            llantaDD = new Path.RoundRectangle(new Rectangle(new Point(pix+80+95+15 , piy+100-5), new Point(pix+80+95-20, piy+100+10)), new Size(2, 2));
+            llantaDI.fillColor = 'black';
+            llantaDD.fillColor = 'black';
+            auto.addChild(llantaDI);
+            auto.addChild(llantaDD);
+
+            aleroD = new Path.Rectangle(new Point(pix+80+125, piy-10), new Size(20, 120));
+            aleroD.style = {
+                fillColor: 'orange',
+                strokeColor: 'black'
+            };
+            auto.addChild(aleroD);
+
+            baseAleroT = new Path.Rectangle(new Point(pix-30, piy+30), new Size(30, 40));
+            baseAleroT.style = {
+                fillColor: 'orange',
+                strokeColor: 'black'
+            };
+            auto.addChild(baseAleroT);
+
+            aleroT = new Path.Rectangle(new Point(pix-30-30, piy+20), new Size(30, 60));
+            aleroT.style = {
+                fillColor: 'orange',
+                strokeColor: 'black'
+            };
+            auto.addChild(aleroT);
+
+            autoLayer.addChild(auto);
+
+            angulo = (autoAngulo0 + 360) * (Math.PI / 180);
+            //auto.rotate(autoAngulo0 + 180);
+
+            auto.position = autoPosicion0;
+
+        }
+
+        function jugar(){
+
+            dibujarPista()
+            crearF1()
+            modoJuego = true;
+        }
+
+        //Función para explotar carrito
+        function explotar(pix,piy){
+
+
+            explosion = new Path();
+            explosion.add(new Point(pix-150,piy-100))
+            explosion.add(new Point(pix-100,piy-20))
+            explosion.add(new Point(pix-50,piy-125))
+            explosion.add(new Point(pix-0,piy-25))
+            explosion.add(new Point(pix+50,piy-50))
+            explosion.add(new Point(pix+100,piy-25))
+            explosion.add(new Point(pix+150,piy-150))
+            explosion.add(new Point(pix+200,piy-50))
+
+            explosion.add(new Point(pix+350,piy-30))
+            explosion.add(new Point(pix+150,piy-30))
+            explosion.add(new Point(pix+300,piy))
+            explosion.add(new Point(pix+150,piy+30))
+
+            explosion.add(new Point(pix+160,piy+105))
+            explosion.add(new Point(pix+120,piy+20))
+            explosion.add(new Point(pix+70,piy+85))
+            explosion.add(new Point(pix+15,piy+15))
+            explosion.add(new Point(pix-50,piy+125))
+            explosion.add(new Point(pix-100,piy+20))
+            explosion.add(new Point(pix-150,piy+150))
+            explosion.add(new Point(pix-140,piy+15))
+
+            explosion.add(new Point(pix-250,piy+30))
+            explosion.add(new Point(pix-150,piy-15))
+            explosion.add(new Point(pix-300,piy-50))
+            explosion.add(new Point(pix-100,piy-20))
+
+            explosion.closed = true;
+            explosion.fillColor = '#F29B14';
+            explosion.strokeColor = 'red';
+
+            auto.addChild(explosion)
+
+            modoJuego=false
+
+        }
+
+
+
+
+
+>>>>>>> 489ed46d597b7fd620b06639fa42825c0635b12d
     </script>
   </head>
   <body>
